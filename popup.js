@@ -2,9 +2,8 @@
 function dumpTabs() {
   chrome.windows.getCurrent(function (currentWindow) {
     chrome.tabs.query({windowId: currentWindow.id}, function(tabs) {
-      var tabUrls = [];
-      tabs.forEach(function(tab) {
-        tabUrls.push(tab.url);
+      var tabUrls = tabs.map(function(tab) {
+        return [tab.title, tab.url].join(' - ');
       });
       var str = tabUrls.join('\n');
       document.getElementById('dump-status').textContent = tabs.length;
