@@ -2,30 +2,20 @@
 function dumpTabs() {
   chrome.windows.getCurrent(function (currentWindow) {
     chrome.tabs.query({windowId: currentWindow.id}, function(tabs) {
+      var textBox = document.getElementById('dumped');
       var tabUrls = tabs.map(function(tab) {
         return [tab.title, tab.url].join(' - ');
       });
       var str = tabUrls.join('\n');
-      document.getElementById('dump-status').textContent = tabs.length;
-      document.getElementById('dumped').value = str;
+      document.getElementById('dump-status').textContent = 'total number of tabs: ' + tabs.length;
+      textBox.value = str;
+
+      textBox.select();
+      document.execCommand('copy');
     });
   });
 }
 
 window.onload = function() {
   document.getElementById('dump').onclick = dumpTabs;
-
-  var textBox = document.getElementById('dumped');
-  // http://stackoverflow.com/questions/5797539/jquery-select-all-text-from-a-textarea
-  textBox.onfocus = function() {
-    textBox.select();
-
-    // Work around Chrome's little problem
-    textBox.onmouseup = function() {
-      // Prevent further mouseup intervention
-      textBox.onmouseup = null;
-      return false;
-    };
-  };
-
 };
